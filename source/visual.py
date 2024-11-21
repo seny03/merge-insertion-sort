@@ -25,14 +25,13 @@ def main():
                 'Merge (Random)': merge_random,
                 'Merge (Reversed)': merge_reverse_sorted,
                 'Merge (Almost sorted)': merge_almost_sorted,
-                'Merge-Insertion (Random)': combine_random,
-                'Merge-Insertion (Reversed)': combine_reverse_sorted,
-                'Merge-Insertion (Almost sorted)': combine_almost_sorted
+                'Combined (Random)': combine_random,
+                'Combined (Reversed)': combine_reverse_sorted,
+                'Combined (Almost sorted)': combine_almost_sorted
             }).set_index('Array size')
 
-            st.line_chart(data, x_label='Array size', y_label='Execution time (ms)', color=["#E63946", "#F4A261", "#2A9D8F", "#A663CC", "#FFD166", "#4CC9F0"]
-
-)
+            st.line_chart(data, x_label='Array size', y_label='Execution time (ms)', color=["#E63946", "#F4A261", "#2A9D8F", "#A663CC", "#FFD166", "#4CC9F0"],
+                          )
 
         except Exception as e:
             st.error(f"Ошибка при обработке файла: {e}")
