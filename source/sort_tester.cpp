@@ -132,7 +132,7 @@ void Sleep(size_t milliseconds) {
   return;
 }
 
-void query(string dataType) {
+void query(string dataType, int repeats = 100) {
   auto generator = ArrayGenerator(10000, 0, 6000);
   if (dataType == "random") {
     generator.genRandom();
@@ -144,18 +144,33 @@ void query(string dataType) {
     throw invalid_argument{"incorrect dataType"};
   }
 
-  vector<long long> arrSizes, mergeScores, combineScores;
-  for (size_t size = 500; size <= 10000; size += 100) {
-    auto testData = generator.selectK(size);
-    auto mergeTester = SortTester(testData, mergeSort);
-    auto combineTester = SortTester(testData, combineSort);
+  vector<long double> arrSizes, mergeScores, combineScores;
+  for (int repeat = 0; repeat < repeats; repeat++) {
+    for (size_t size = 500, i = 0; size <= 10000; size += 100, i++) {
+      auto testData = generator.selectK(size);
+      auto mergeTester = SortTester(testData, mergeSort);
+      auto combineTester = SortTester(testData, combineSort);
 
-    long long mergeScore = mergeTester.test();
-    long long combineScore = combineTester.test();
+      long long mergeScore = mergeTester.test();
+      long long combineScore = combineTester.test();
 
-    arrSizes.push_back(size);
-    mergeScores.push_back(mergeScore);
-    combineScores.push_back(combineScore);
+      if (i < arrSizes.size()) {
+        mergeScores[i] += mergeScore;
+        combineScores[i] += combineScore;
+      } else {
+        arrSizes.push_back(size);
+        mergeScores.push_back(mergeScore);
+        combineScores.push_back(combineScore);
+      }
+    }
+  }
+
+  // get average in milliseconds
+  for (auto &v : mergeScores) {
+    v /= (repeats * 1'000'000);
+  }
+  for (auto &v : combineScores) {
+    v /= (repeats * 1'000'000);
   }
 
   string filename = "merge_" + dataType + ".txt";
