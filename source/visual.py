@@ -30,7 +30,8 @@ def main():
                 'Merge-Insertion (Almost sorted)': combine_almost_sorted
             }).set_index('Array size')
 
-            st.line_chart(data, x_label='Array size', y_label='Execution time (ms)', color=["#E63946", "#F4A261", "#2A9D8F", "#6A4C93", "#FFB703", "#1D3557"]
+            st.line_chart(data, x_label='Array size', y_label='Execution time (ms)', color=["#E63946", "#F4A261", "#2A9D8F", "#A663CC", "#FFD166", "#4CC9F0"]
+
 )
 
         except Exception as e:
