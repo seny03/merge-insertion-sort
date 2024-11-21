@@ -66,7 +66,7 @@ public:
   vector<int> generated;
 
   ArrayGenerator(int size, int minValue, int maxValue)
-      : size_(size), dis_(minValue, maxValue), gen_(42) {}
+      : size_(size), dis_(minValue, maxValue) {}
   ArrayGenerator() : ArrayGenerator(0, 0, 0) {}
 
   void genRandom() {
@@ -89,6 +89,19 @@ public:
     while (swaps--) {
       randSwap(generated);
     }
+  }
+
+  void gen(string dataType) {
+    if (dataType == "random") {
+      genRandom();
+    } else if (dataType == "reverse_sorted") {
+      genReverseSorted();
+    } else if (dataType == "almost_sorted") {
+      genReverseSorted();
+    } else {
+      throw invalid_argument{"incorrect dataType"};
+    }
+    return;
   }
 
   vector<int> selectK(size_t k) {
@@ -122,7 +135,7 @@ public:
 
     auto elapsed = std::chrono::high_resolution_clock::now() - start;
     long long msec =
-        std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed).count();
+        std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();
     return msec;
   }
 };
@@ -134,18 +147,10 @@ void Sleep(size_t milliseconds) {
 
 void query(string dataType, int repeats = 100) {
   auto generator = ArrayGenerator(10000, 0, 6000);
-  if (dataType == "random") {
-    generator.genRandom();
-  } else if (dataType == "reverse_sorted") {
-    generator.genReverseSorted();
-  } else if (dataType == "almost_sorted") {
-    generator.genReverseSorted();
-  } else {
-    throw invalid_argument{"incorrect dataType"};
-  }
 
   vector<long double> arrSizes, mergeScores, combineScores;
   for (int repeat = 0; repeat < repeats; repeat++) {
+    generator.gen(dataType);
     for (size_t size = 500, i = 0; size <= 10000; size += 100, i++) {
       auto testData = generator.selectK(size);
       auto mergeTester = SortTester(testData, mergeSort);
@@ -167,10 +172,10 @@ void query(string dataType, int repeats = 100) {
 
   // get average in milliseconds
   for (auto &v : mergeScores) {
-    v /= (repeats * 1'000'000);
+    v /= (repeats);
   }
   for (auto &v : combineScores) {
-    v /= (repeats * 1'000'000);
+    v /= (repeats);
   }
 
   string filename = "merge_" + dataType + ".txt";
