@@ -78,8 +78,7 @@ public:
 
   void genReverseSorted() {
     genRandom();
-    sort(generated.begin(), generated.end());
-    reverse(generated.begin(), generated.end());
+    sort(generated.rbegin(), generated.rend());
   }
 
   void genAlmostSorted() {
